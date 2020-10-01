@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "shipping"
+version = "0.1.0"
+description = "Cli utility for deploying packages"
+authors = ["Måns Magnusson <mans.magnusson@scilifelab.se>"]
+maintainers = ["Måns Magnusson <mans.magnusson@scilifelab.se>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/ClinicalGenomics/shipping/"
+repository = "https://github.com/ClinicalGenomics/shipping/"
+keywords = ["Deployment",
+            "Virtual Environments",
+            "Containers",
+            "Conda",
+            "Packaging"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+click = "^7.1.2"
+pydantic = "^1.6.1"
+coloredlogs = "^14.0"
+pyyaml = "^5.3.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[tool.poetry.scripts]
+shipping = "shipping.__main__:main"
+
+[tool.black]
+line-length = 100
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "tests",
+]
+
+[tool.isort]
+profile = "black"
+line_length = 100
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
