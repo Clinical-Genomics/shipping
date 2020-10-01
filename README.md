@@ -25,7 +25,7 @@ tool: scout
 env_name: P_scout
 deploy_method: pip
 
-$shipping --host-info configs/server1.yaml deploy --config configs/scout.yaml
+$shipping --host-info configs/server1/prod.yaml deploy --config configs/server1/scout_production.yaml
 ```
 
 This command will deploy the tool `scout` into the conda environment `P_scout` on the server `computer1` and log who deployed what version and when.
