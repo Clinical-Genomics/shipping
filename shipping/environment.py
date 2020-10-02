@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from shipping.commands import Process
+from shipping.configs.base_config import HostConfig
 
 LOG = logging.getLogger(__name__)
 
@@ -48,6 +49,14 @@ def get_python_path(env_name: str = None) -> Path:
         return Path(sys.executable)
 
     return get_conda_path(env_name) / "bin" / "python"
+
+
+def create_conda_env_name(env_prefix: str, tool_name: str) -> str:
+    """Create the name of preferred conda environment name
+
+    The environment name is based on the environment state and the specified prefixes
+    """
+    return "".join([env_prefix, tool_name])
 
 
 def get_conda_base() -> Path:
