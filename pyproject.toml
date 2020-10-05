@@ -20,6 +20,7 @@ click = "^7.1.2"
 pydantic = "^1.6.1"
 coloredlogs = "^14.0"
 pyyaml = "^5.3.1"
+pytz = "^2020.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

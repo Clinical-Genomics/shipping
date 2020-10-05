@@ -4,7 +4,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Optional
 
-from pydantic import BaseModel, ValidationError
+import pytz
+from pydantic import BaseModel
 
 
 class ContainerEnum(str, Enum):
@@ -27,6 +28,14 @@ class HostConfig(BaseModel):
     stage_prefix: str = "S_"
     prod_prefix: str = "P_"
     dev_prefix: str = "D_"
+    time_zone: str = "Europe/Stockholm"
+    # Default python version to use
+    python_version: str = "3.7"
+
+    @property
+    def tz_object(self):
+        """Return a timezone object based on the given time zone"""
+        return pytz.timezone(self.time_zone)
 
     @property
     def env_prefix(self) -> str:
@@ -55,25 +64,6 @@ class AppConfig(BaseModel):
     # Deploy method could be pip, github, poetry etc
     deploy_method: str = "pip"
     # container_system could be conda, docker etc
-    container_system: ContainerEnum = ContainerEnum.docker
-
-
-# set -e
-#
-# TOOL='clinical-genomics/genotype'
-#
-# SCRIPTPATH=$(dirname "$(readlink -nm "$0")")
-# sh "${SCRIPTPATH}/../assert_host.sh" hasta.scilifelab.se
-# sh "${SCRIPTPATH}/../confirm.sh" 'This will install the latest version of genotype on master in production'
-#
-#
-# shopt -s expand_aliases
-# source "${HOME}/.bashrc"
-# source "${SCRIPTPATH}/useprod.sh"
-#
-# CURRENT_VERSION=$(genotype --version) || CURRENT_VERSION=0
-# pip install -U "git+https://github.com/${TOOL}"
-# UPDATED_VERSION=$(genotype --version) || UPDATED_VERSION=0
-#
-# bash "${SCRIPTPATH}/../log-deploy.sh" "$TOOL" "$CURRENT_VERSION" "$UPDATED_VERSION"
-# exec "${SCRIPTPATH}/../test_version_command.sh"
+    container_system: ContainerEnum = ContainerEnum.conda
+    # If a app specific python version should be used
+    python_version: str = None

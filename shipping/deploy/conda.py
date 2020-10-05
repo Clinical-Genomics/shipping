@@ -1,20 +1,22 @@
 """Code to deploy a package into a conda environment"""
 
 import logging
+from pathlib import Path
 
 from shipping import environment
+from shipping.commands import Process
+from shipping.environment import get_python_path
 
 LOG = logging.getLogger(__name__)
 
 
 def check_if_deploy_possible(conda_env_name: str) -> bool:
-    """Function to check if conda requirements are fulfilled for deployement
+    """Function to check if conda requirements are fulfilled for deployment
 
-    1. Check if conda exists
+    1. Check if conda is available
     2. Check if the environment exists
-    3. Check if
     """
-    LOG.info("Check if we are in a conda environment")
+    LOG.info("Check if conda is available on your system")
     if not environment.conda_exists(environment.get_conda_env_path()):
         LOG.warning("Please make sure conda is available")
         return False
@@ -35,3 +37,22 @@ def deploy_conda(tool_name: str, conda_env_name: str) -> None:
     """Deploy a tool into a conda environment"""
     if not check_if_deploy_possible(conda_env_name):
         raise SyntaxError
+    python_process = Process(str(get_python_path(conda_env_name)))
+    deploy_arguments = ["-m", "pip", "install", "-U", tool_name]
+    python_process.run_command(deploy_arguments)
+
+
+def provision_conda(conda_env_name: str, py_version: str = "3.7") -> bool:
+    """Set up a conda a conda environment
+
+    If conda environment already exists do nothing
+    """
+    if not environment.conda_exists(environment.get_conda_env_path()):
+        LOG.warning("Please make sure conda is available")
+        return False
+
+    conda_process = Process(binary="conda")
+    environment.create_conda_env(
+        conda_process=conda_process, env_name=conda_env_name, py_version=py_version
+    )
+    return True

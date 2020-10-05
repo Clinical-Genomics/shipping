@@ -8,7 +8,6 @@ import sys
 from pathlib import Path
 
 from shipping.commands import Process
-from shipping.configs.base_config import HostConfig
 
 LOG = logging.getLogger(__name__)
 
@@ -63,7 +62,7 @@ def get_conda_base() -> Path:
     """Return the path to the base conda"""
     current_conda_path = get_conda_env_path()
     LOG.debug("Found env %s", current_conda_path)
-    if not "envs" in current_conda_path.parts:
+    if "envs" not in current_conda_path.parts:
         LOG.debug("Already in base!")
         return current_conda_path
 
@@ -71,10 +70,12 @@ def get_conda_base() -> Path:
     return current_conda_path.parent.parent
 
 
-def create_conda_env(conda_process: Process, env_name: str, force: bool = False) -> Path:
+def create_conda_env(
+    conda_process: Process, env_name: str, py_version: str, force: bool = False
+) -> Path:
     """Create a conda environment and return the path to that env"""
     new_env_path = get_conda_path(env_name)
-    cmd_args = ["create", "-n", env_name]
+    cmd_args = ["create", "-n", env_name, f"python={py_version}", "--yes"]
 
     if conda_exists(new_env_path):
         LOG.warning("Environment %s already exists", env_name)

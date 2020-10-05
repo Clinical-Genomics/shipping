@@ -3,38 +3,27 @@
 import logging
 
 import click
-import yaml
 
-from shipping.configs.base_config import AppConfig, HostConfig
+from shipping.configs.base_config import AppConfig
 from shipping.deploy.conda import deploy_conda
-from shipping.environment import create_conda_env_name
 
 LOG = logging.getLogger(__name__)
 
 
-@click.command()
-@click.option("-c", "--app-config", type=click.Path(exists=True), required=True)
+@click.command(name="deploy")
 @click.pass_context
-def deploy(context, app_config):
+def deploy_cmd(context):
+    """Deploy a tool into an existing container system"""
     LOG.info("Running shipping deploy")
-    LOG.info("Use config %s", app_config)
-    host_config = context.obj.get("host_config", HostConfig())
 
-    with open(app_config, "r") as yml_file:
-        cfg = yaml.load(yml_file, Loader=yaml.FullLoader)
-        app_config_obj = AppConfig(**cfg)
+    app_config: AppConfig = context.obj["app_config"]
+    env_name: str = context.obj["env_name"]
 
-    if app_config_obj.container_system == "conda":
-        env_name = app_config_obj.env_name or create_conda_env_name(
-            env_prefix=host_config.env_prefix, tool_name=app_config_obj.tool
-        )
-        LOG.info(
-            "%s wants to deploy %s on host %s in environment %s",
-            context.obj["current_user"],
-            app_config_obj.tool,
-            context.obj["current_host"],
-            env_name,
-        )
-        deploy_conda(tool_name=app_config_obj.tool, conda_env_name=env_name)
-    else:
-        LOG.warning("Unsupported container system: %s", app_config_obj.container_system.value)
+    LOG.info(
+        "%s wants to deploy %s on host %s in environment %s",
+        context.obj["current_user"],
+        app_config.tool,
+        context.obj["current_host"],
+        env_name,
+    )
+    deploy_conda(tool_name=app_config.tool, conda_env_name=env_name)
