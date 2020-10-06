@@ -1,6 +1,8 @@
 """Tests for the package module"""
 
+from shipping import environment
 from shipping.commands import Process
+from shipping.deploy.conda import deploy_conda
 from shipping.package import fetch_package_version
 
 
@@ -22,13 +24,23 @@ def test_get_package_version_non_existing(current_python_process: Process):
     assert version == ""
 
 
-def test_get_package_version_other_env(other_python_process: Process):
+def test_get_package_version_other_env(other_python_process: Process, other_env: str):
     # GIVEN a Process with the python binary from another environment
-    # GIVEN a package that does not exist in the current environment
+    other_python = other_python_process.binary
+    # GIVEN a current environment with python and a process
+    current_python = environment.get_python_path()
+    current_python_process = Process(str(current_python))
 
-    # WHEN fetching the version the version of the package from another environment
-    version = fetch_package_version(
-        python_process=current_python_process, package_name="non_existing"
+    assert current_python != other_python
+    # GIVEN a package that exists in other environment but not in the current environment
+    package_name = "marshmallow"
+    deploy_conda(tool_name=package_name, conda_env_name=other_env)
+    current_env_version = fetch_package_version(
+        python_process=current_python_process, package_name=package_name
     )
-    # THEN assert that the version was returned
-    assert version == ""
+    assert current_env_version == ""
+
+    # WHEN fetching the version from the other env
+    version = fetch_package_version(python_process=other_python_process, package_name=package_name)
+    # THEN assert that a version was returned
+    assert version != ""

@@ -1,12 +1,23 @@
 """Fixtures for the shipping tests"""
 
-import sys
 from pathlib import Path
 
 import pytest
 
 from shipping import environment
 from shipping.commands import Process
+from shipping.configs.base_config import HostConfig
+
+# Host fixtures
+
+
+@pytest.fixture(name="host_config")
+def fixture_host_config() -> HostConfig:
+    """Get a host config with default values"""
+    return HostConfig()
+
+
+# Env fixtures
 
 
 @pytest.fixture(name="env_name")
@@ -22,20 +33,40 @@ def fixture_conda_process() -> Process:
 
 
 @pytest.yield_fixture(name="other_env")
-def fixture_other_env(env_name: str, conda_process: Process) -> str:
+def fixture_other_env(env_name: str, conda_process: Process, host_config: HostConfig) -> str:
     """Create another environment and return the name"""
-    environment.create_conda_env(conda_process, env_name)
+    environment.create_conda_env(
+        conda_process=conda_process, env_name=env_name, py_version=host_config.python_version
+    )
     yield env_name
     environment.delete_conda_env(conda_process, env_name)
+
+
+# Python binary fixtures
 
 
 @pytest.fixture(name="current_python")
 def fixture_current_python() -> Path:
     """Return the path to current python being used"""
-    return Path(sys.executable)
+    return environment.get_python_path()
+
+
+@pytest.fixture(name="other_python")
+def fixture_other_python(other_env: str) -> Path:
+    """Return the path to current python being used"""
+    return environment.get_python_path(other_env)
+
+
+# Process fixtures
 
 
 @pytest.fixture(name="current_python_process")
 def fixture_current_python_process(current_python: Path) -> Process:
     """Return a Process with current python"""
     return Process(binary=str(current_python))
+
+
+@pytest.fixture(name="other_python_process")
+def fixture_other_python_process(other_python: Path) -> Process:
+    """Return a Process with current python"""
+    return Process(binary=str(other_python))
