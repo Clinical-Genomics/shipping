@@ -3,8 +3,8 @@ name: Tests
 on: [push, pull_request]
 
 jobs:
-  example-1:
-    name: Ex1 (${{ matrix.python-version }}, ${{ matrix.os }})
+  tests:
+    name: Tests (${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -16,11 +16,7 @@ jobs:
         with:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-      - name: Conda info
+      - name: Run tests
         shell: bash -l {0}
         run: |
-          conda info
-          conda list
-          conda create -n shipping python=3.7 --yes
-          conda activate shipping
-          which python
+          pytest -v tests
