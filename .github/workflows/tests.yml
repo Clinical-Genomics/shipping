@@ -11,7 +11,6 @@ jobs:
       matrix:
         os: [ "ubuntu-latest" ]
         python-version: [ "3.7", "3.6" ]
-        poetry-version: [1.0.10]
     steps:
       - name: Setup conda
         uses: conda-incubator/setup-miniconda@v1
@@ -19,9 +18,8 @@ jobs:
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2.0.0
-        with:
-          poetry-version: ${{ matrix.poetry-version }}
+        run:
+          conda install poetry
       - name: Install package
         run:
           poetry install
