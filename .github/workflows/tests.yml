@@ -21,3 +21,6 @@ jobs:
         run: |
           conda info
           conda list
+          conda create -n shipping python=3.7 --yes
+          conda activate shipping
+          which python
