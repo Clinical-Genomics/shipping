@@ -11,6 +11,7 @@ jobs:
       matrix:
         os: [ "ubuntu-latest" ]
         python-version: [ "3.7", "3.6" ]
+        poetry-version: [1.0.10]
     steps:
       - name: Setup conda
         uses: conda-incubator/setup-miniconda@v1
