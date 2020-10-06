@@ -24,6 +24,8 @@ jobs:
       - name: Install package
         shell: bash -l {0}
         run:
+          git clone https://github.com/Clinical-Genomics/shipping
+          cd shipping
           poetry install
       - name: Run tests
         shell: bash -l {0}
