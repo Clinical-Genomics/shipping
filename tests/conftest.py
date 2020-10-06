@@ -6,15 +6,31 @@ import pytest
 
 from shipping import environment
 from shipping.commands import Process
-from shipping.configs.base_config import HostConfig
+from shipping.configs.base_config import AppConfig, HostConfig
 
-# Host fixtures
+# Name fixtures
+
+
+@pytest.fixture(name="tool_name")
+def fixture_tool_name() -> str:
+    """Get the name of a too existing on pip"""
+    _tool_name = "marshmallow"
+    return _tool_name
+
+
+# Config fixtures
 
 
 @pytest.fixture(name="host_config")
 def fixture_host_config() -> HostConfig:
     """Get a host config with default values"""
     return HostConfig()
+
+
+@pytest.fixture(name="app_config")
+def fixture_app_config(tool_name: str, env_name: str) -> AppConfig:
+    """Get a app config with default values"""
+    return AppConfig(tool=tool_name, env_name=env_name)
 
 
 # Env fixtures

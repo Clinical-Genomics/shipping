@@ -6,7 +6,7 @@ import click
 import coloredlogs
 from pydantic.error_wrappers import ValidationError
 
-from shipping import environment
+from shipping import __version__, environment
 from shipping.configs.base_config import AppConfig, HostConfig
 
 from .check import check_cmd
@@ -21,6 +21,7 @@ LOG = logging.getLogger(__name__)
 @click.option("-h", "--host-config", type=click.Path(exists=True))
 @click.option("-a", "--app-config", type=click.Path(exists=True))
 @click.option("-t", "--tool-name", help="name of tool to deploy")
+@click.version_option(__version__)
 @click.pass_context
 def cli(context, host_config: str, app_config: str, tool_name: str):
     coloredlogs.install(level=logging.DEBUG)
