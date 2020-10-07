@@ -1,4 +1,5 @@
 """Tests for the base command"""
+import logging
 
 from click.testing import CliRunner
 
@@ -15,3 +16,15 @@ def test_run_version_cmd():
 
     # THEN assert that the correct version is printed
     assert __version__ in result.output
+
+
+def test_run_check_cmd(tool_name: str, caplog):
+    caplog.set_level(logging.DEBUG)
+    # GIVEN a cli runner and the base command
+    runner = CliRunner()
+
+    # WHEN running the version command
+    runner.invoke(cli, ["--tool-name", tool_name, "check"])
+
+    # THEN assert that correct information is printed
+    assert "Running shipping check" in caplog.text
