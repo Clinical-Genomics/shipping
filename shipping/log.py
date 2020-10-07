@@ -1,6 +1,7 @@
 """Code for logging information"""
 
 from datetime import datetime, tzinfo
+from pathlib import Path
 
 from shipping import __version__
 
@@ -29,3 +30,9 @@ def get_log_line(
         __version__,
     ]
     return "\t".join(log_data)
+
+
+def log_deploy(log_line: str, log_file: Path) -> None:
+    """Log information about deployment to file"""
+    with open(log_file, "a") as file_object:
+        file_object.write(log_line + "\n")
