@@ -39,7 +39,7 @@ def fixture_app_config(tool_name: str, env_name: str) -> AppConfig:
 @pytest.fixture(name="env_name")
 def fixture_env_name() -> str:
     """Get the name of a testing environment"""
-    return "test_env"
+    return "D_marshmallow"
 
 
 @pytest.fixture(name="conda_process")

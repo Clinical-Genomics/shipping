@@ -24,7 +24,9 @@ def test_get_package_version_non_existing(current_python_process: Process):
     assert version == ""
 
 
-def test_get_package_version_other_env(other_python_process: Process, other_env: str):
+def test_get_package_version_other_env(
+    other_python_process: Process, other_env: str, tool_name: str
+):
     # GIVEN a Process with the python binary from another environment
     other_python = other_python_process.binary
     # GIVEN a current environment with python and a process
@@ -33,14 +35,13 @@ def test_get_package_version_other_env(other_python_process: Process, other_env:
 
     assert current_python != other_python
     # GIVEN a package that exists in other environment but not in the current environment
-    package_name = "marshmallow"
-    deploy_conda(tool_name=package_name, conda_env_name=other_env)
+    deploy_conda(tool_name=tool_name, conda_env_name=other_env)
     current_env_version = fetch_package_version(
-        python_process=current_python_process, package_name=package_name
+        python_process=current_python_process, package_name=tool_name
     )
     assert current_env_version == ""
 
     # WHEN fetching the version from the other env
-    version = fetch_package_version(python_process=other_python_process, package_name=package_name)
+    version = fetch_package_version(python_process=other_python_process, package_name=tool_name)
     # THEN assert that a version was returned
     assert version != ""

@@ -29,12 +29,30 @@ def get_conda_name() -> str:
 
 def get_conda_env_path() -> Path:
     """Return the path to the current conda environment"""
-    return Path(sys.prefix)
+    conda_env_path = sys.prefix
+    LOG.debug("Found conda env path: %s", conda_env_path)
+    return Path(conda_env_path)
 
 
-def conda_exists(conda_path: Path) -> bool:
+def conda_exists() -> bool:
+    """Check if conda is available on the system"""
+    conda_path = get_conda_env_path()
+    print(conda_path, type(conda_path))
+    if "conda" in str(conda_path):
+        LOG.debug("Conda is available: %s", get_conda_base(conda_path))
+        return True
+
+    LOG.info("Seems like conda does not exist: %s", conda_path)
+    return False
+
+
+def conda_env_exists(env_name: str) -> bool:
     """Check if a conda environment exists"""
-    return (conda_path / "conda-meta").exists()
+    LOG.debug("Check if conda environment %s exists", env_name)
+    conda_path = get_conda_path(env_name)
+    env_exists = conda_path.exists()
+    LOG.debug("Conda env: %s exists: %s", env_name, env_exists)
+    return env_exists
 
 
 def get_conda_path(env_name: str) -> Path:
@@ -58,10 +76,11 @@ def create_conda_env_name(env_prefix: str, tool_name: str) -> str:
     return "".join([env_prefix, tool_name])
 
 
-def get_conda_base() -> Path:
+def get_conda_base(current_conda_path: Path = None) -> Path:
     """Return the path to the base conda"""
-    current_conda_path = get_conda_env_path()
-    LOG.debug("Found env %s", current_conda_path)
+    if not current_conda_path:
+        current_conda_path = get_conda_env_path()
+
     if "envs" not in current_conda_path.parts:
         LOG.debug("Already in base!")
         return current_conda_path
@@ -77,7 +96,7 @@ def create_conda_env(
     new_env_path = get_conda_path(env_name)
     cmd_args = ["create", "-n", env_name, f"python={py_version}", "--yes"]
 
-    if conda_exists(new_env_path):
+    if conda_env_exists(env_name):
         LOG.warning("Environment %s already exists", env_name)
         if not force:
             return new_env_path
@@ -91,8 +110,8 @@ def create_conda_env(
 
 def delete_conda_env(conda_process: Process, env_name: str) -> None:
     """Delete an existing conda environment"""
-    if not conda_exists(get_conda_base() / env_name):
-        LOG.warning("Environment %s does not exist", env_name)
+    if not conda_env_exists(env_name):
+        LOG.info("Environment %s does not exist", env_name)
         return
 
     cmd_args = ["env", "remove", "-n", env_name]

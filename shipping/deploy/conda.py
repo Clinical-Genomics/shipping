@@ -1,7 +1,6 @@
 """Code to deploy a package into a conda environment"""
 
 import logging
-from pathlib import Path
 
 from shipping import environment
 from shipping.commands import Process
@@ -17,7 +16,7 @@ def check_if_deploy_possible(conda_env_name: str) -> bool:
     2. Check if the environment exists
     """
     LOG.info("Check if conda is available on your system")
-    if not environment.conda_exists(environment.get_conda_env_path()):
+    if not environment.conda_exists():
         LOG.warning("Please make sure conda is available")
         return False
 
@@ -26,7 +25,7 @@ def check_if_deploy_possible(conda_env_name: str) -> bool:
     package_env = environment.get_conda_path(env_name=conda_env_name)
     LOG.info("You want to install in conda environment %s", package_env)
 
-    if not environment.conda_exists(package_env):
+    if not environment.conda_env_exists(conda_env_name):
         LOG.warning("Environment %s does not exist", package_env)
         return False
 
@@ -47,7 +46,7 @@ def provision_conda(conda_env_name: str, py_version: str = "3.7") -> bool:
 
     If conda environment already exists do nothing
     """
-    if not environment.conda_exists(environment.get_conda_env_path()):
+    if not environment.conda_exists():
         LOG.warning("Please make sure conda is available")
         return False
 
