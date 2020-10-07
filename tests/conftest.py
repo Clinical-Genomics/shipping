@@ -8,7 +8,7 @@ from shipping import environment
 from shipping.commands import Process
 from shipping.configs.base_config import AppConfig, HostConfig
 
-# Name fixtures
+# Tool fixtures
 
 
 @pytest.fixture(name="tool_name")
@@ -16,6 +16,13 @@ def fixture_tool_name() -> str:
     """Get the name of a too existing on pip"""
     _tool_name = "marshmallow"
     return _tool_name
+
+
+@pytest.fixture(name="old_tool_version")
+def fixture_old_tool_version() -> str:
+    """Return an old version of an existing tool"""
+    _old = "3.1"
+    return _old
 
 
 # Config fixtures
@@ -56,6 +63,16 @@ def fixture_other_env(env_name: str, conda_process: Process, host_config: HostCo
     )
     yield env_name
     environment.delete_conda_env(conda_process, env_name)
+
+
+@pytest.fixture(name="populated_env")
+def fixture_populated_env(
+    other_env: str, tool_name: str, old_tool_version: str, other_python_process: Process
+) -> str:
+    """Return the name of a environment populated with the tool"""
+    deploy_arguments = ["-m", "pip", "install", f"{tool_name}=={old_tool_version}"]
+    other_python_process.run_command(deploy_arguments)
+    return other_env
 
 
 # Python binary fixtures
