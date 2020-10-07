@@ -28,6 +28,7 @@ class HostConfig(BaseModel):
     stage_prefix: str = "S_"
     prod_prefix: str = "P_"
     dev_prefix: str = "D_"
+    # Available time zones in pytz.all_timezones
     time_zone: str = "Europe/Stockholm"
     # Default python version to use
     python_version: str = "3.7"

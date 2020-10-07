@@ -37,7 +37,6 @@ def get_conda_env_path() -> Path:
 def conda_exists() -> bool:
     """Check if conda is available on the system"""
     conda_path = get_conda_env_path()
-    print(conda_path, type(conda_path))
     if "conda" in str(conda_path):
         LOG.debug("Conda is available: %s", get_conda_base(conda_path))
         return True
