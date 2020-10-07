@@ -30,11 +30,7 @@ jobs:
       - name: Run tests and coveralls
         shell: bash -l {0}
         run: |
-          pwd
-          ls -alh
           cd shipping
-          pwd
-          ls -alh
           pytest --cov=shipping/
           coveralls
         env:
