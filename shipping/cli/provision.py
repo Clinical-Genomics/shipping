@@ -28,4 +28,7 @@ def provision_cmd(context):
         python_version,
     )
 
-    provision_conda(conda_env_name=env_name, py_version=python_version)
+    # There will be other types of provisions here
+    result = provision_conda(conda_env_name=env_name, py_version=python_version)
+    if result is False:
+        raise click.Abort
