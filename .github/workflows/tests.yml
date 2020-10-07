@@ -32,6 +32,9 @@ jobs:
         run: |
           pwd
           ls -alh
+          cd shipping
+          pwd
+          ls -alh
           pytest --cov=shipping/
           coveralls
         env:
