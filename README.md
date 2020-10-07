@@ -1,5 +1,8 @@
 # Shipping :ship: 
 
+![Shipping tests][github-url] [![Coverage Status][coveralls-image]][coveralls-url] [![CodeFactor][codefactor-image]][codefactor-url] [![Code style: black][black-image]][black-url]
+
+
 Cli utility for deploying packages.
 
 ## Idea
@@ -34,3 +37,11 @@ There will be different use cases where the deployment process involves restarti
 
 
 [yarn]: https://yarnpkg.com
+[pypi]: https://pypi.python.org/pypi/shipping/
+[coveralls-url]: https://coveralls.io/r/Clinical-Genomics/shipping
+[coveralls-image]: https://img.shields.io/coveralls/Clinical-Genomics/shipping.svg?style=flat-square
+[github-url]: https://github.com/Clinical-Genomics/shipping/workflows/Tests/badge.svg
+[codefactor-image]: https://www.codefactor.io/repository/github/clinical-genomics/shipping/badge
+[codefactor-url]: https://www.codefactor.io/repository/github/clinical-genomics/shipping
+[black-image]: https://img.shields.io/badge/code%20style-black-000000.svg
+[black-url]: https://github.com/psf/black
