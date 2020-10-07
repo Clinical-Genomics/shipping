@@ -26,4 +26,8 @@ def deploy_cmd(context):
         context.obj["current_host"],
         env_name,
     )
-    deploy_conda(tool_name=app_config.tool, conda_env_name=env_name)
+    result: bool = deploy_conda(tool_name=app_config.tool, conda_env_name=env_name)
+    if result is False:
+        raise click.Abort
+
+    LOG.info("Tool was successfully deployed")

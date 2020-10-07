@@ -26,19 +26,20 @@ def check_if_deploy_possible(conda_env_name: str) -> bool:
     LOG.info("You want to install in conda environment %s", package_env)
 
     if not environment.conda_env_exists(conda_env_name):
-        LOG.warning("Environment %s does not exist", package_env)
+        LOG.warning("Environment %s does not exist", conda_env_name)
         return False
 
     return True
 
 
-def deploy_conda(tool_name: str, conda_env_name: str) -> None:
+def deploy_conda(tool_name: str, conda_env_name: str) -> bool:
     """Deploy a tool into a conda environment"""
     if not check_if_deploy_possible(conda_env_name):
-        raise SyntaxError
+        return False
     python_process = Process(str(get_python_path(conda_env_name)))
     deploy_arguments = ["-m", "pip", "install", "-U", tool_name]
     python_process.run_command(deploy_arguments)
+    return True
 
 
 def provision_conda(conda_env_name: str, py_version: str = "3.7") -> bool:
