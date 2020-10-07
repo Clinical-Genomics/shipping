@@ -27,7 +27,11 @@ jobs:
           git clone https://github.com/Clinical-Genomics/shipping
           cd shipping
           poetry install
-      - name: Run tests
+      - name: Run tests and coveralls
         shell: bash -l {0}
         run: |
-          pytest -v
+          pytest --cov=shipping/
+          coveralls
+        env:
+          GITHUB: 1
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
