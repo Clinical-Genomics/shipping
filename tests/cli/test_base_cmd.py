@@ -28,3 +28,17 @@ def test_run_check_cmd(tool_name: str, caplog):
 
     # THEN assert that correct information is printed
     assert "Running shipping check" in caplog.text
+
+
+def test_run_shipping_no_tool(caplog):
+    caplog.set_level(logging.DEBUG)
+    # GIVEN a cli runner and the base command
+    runner = CliRunner()
+
+    # WHEN running the version command
+    result = runner.invoke(cli, ["check"])
+
+    # THEN assert it exits with a non zero exit code
+    assert result.exit_code != 0
+    # THEN assert that correct information is printed
+    assert "Please provide either app config or tool" in caplog.text

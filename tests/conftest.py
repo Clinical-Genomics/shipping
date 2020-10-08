@@ -8,6 +8,27 @@ from shipping import environment
 from shipping.commands import Process
 from shipping.configs.base_config import AppConfig, HostConfig
 
+# File fixtures
+
+
+@pytest.fixture(name="fixtures_path")
+def fixture_fixtures_path() -> Path:
+    """Path to dir with fixture files"""
+    return Path("tests/fixtures")
+
+
+@pytest.fixture(name="configs_path")
+def fixture_configs_path(fixtures_path: Path) -> Path:
+    """Path to dir with test config files"""
+    return fixtures_path / "configs"
+
+
+@pytest.fixture(name="faulty_host_config")
+def fixture_faulty_host_config(configs_path: Path) -> Path:
+    """Get the path to a host config where host is wrong"""
+    return configs_path / "faulty_host.yml"
+
+
 # Tool fixtures
 
 
