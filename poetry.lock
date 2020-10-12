@@ -344,9 +344,9 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "b0a798de7056c3cd2b255458c2809c521e3f95b91ed35d60d07899d4d33a44f7"
+content-hash = "81bc03066e31273cea4aa580fcb74d8ec4e273c643ec14f7356c12ae4ca23273"
 lock-version = "1.0"
-python-versions = "^3.6"
+python-versions = ">=3.6, <3.8"
 
 [metadata.files]
 atomicwrites = [
