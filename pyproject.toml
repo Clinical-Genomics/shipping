@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shipping"
-version = "0.2.2"
+version = "0.2.3"
 description = "Cli utility for deploying packages"
 authors = ["Måns Magnusson <mans.magnusson@scilifelab.se>"]
 maintainers = ["Måns Magnusson <mans.magnusson@scilifelab.se>"]
