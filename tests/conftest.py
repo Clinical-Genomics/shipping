@@ -1,12 +1,15 @@
 """Fixtures for the shipping tests"""
 
+import shutil
 from pathlib import Path
 
 import pytest
+import yaml
 
 from shipping import environment
 from shipping.commands import Process
 from shipping.configs.base_config import AppConfig, HostConfig
+from shipping.environment import get_host_name
 
 # File fixtures
 
@@ -27,6 +30,41 @@ def fixture_configs_path(fixtures_path: Path) -> Path:
 def fixture_faulty_host_config(configs_path: Path) -> Path:
     """Get the path to a host config where host is wrong"""
     return configs_path / "faulty_host.yml"
+
+
+# Temporary files and directories
+
+
+@pytest.fixture(scope="function", name="project_dir")
+def fixture_project_dir(tmpdir_factory) -> Path:
+    """Path to a temporary directory where intermediate files can be stored"""
+    my_tmpdir = Path(tmpdir_factory.mktemp("data"))
+    yield my_tmpdir
+    shutil.rmtree(str(my_tmpdir))
+
+
+@pytest.fixture(scope="function", name="tmp_host")
+def fixture_tmp_host_path(project_dir: Path) -> Path:
+    """Return the path to a file name that can be used to store temporary host information"""
+    return project_dir / "host_config.yml"
+
+
+@pytest.fixture(scope="function", name="tmp_log_file")
+def fixture_tmp_log_file(project_dir: Path) -> Path:
+    """Return the path to a file that can be used as a log file"""
+    log_file = project_dir / "deploy_log.txt"
+    log_file.touch()
+    return log_file
+
+
+@pytest.fixture(scope="function", name="tmp_host_config")
+def fixture_tmp_host_config(project_dir: Path, tmp_log_file: Path) -> Path:
+    """Return the path to a file with host configs for current setup"""
+    host_configs = dict(host=get_host_name(), log_file=str(tmp_log_file))
+    host_file: Path = project_dir / "host_config.yml"
+    with open(host_file, "w") as outfile:
+        yaml.dump(host_configs, outfile)
+    return host_file
 
 
 # Tool fixtures
