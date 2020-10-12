@@ -15,7 +15,7 @@ keywords = ["Deployment",
             "Packaging"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.6, <3.8"
 click = "^7.1.2"
 pydantic = "^1.6.1"
 coloredlogs = "^14.0"
